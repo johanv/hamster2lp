@@ -9,8 +9,9 @@ WORKSPACE_ID=workspace_id
 
 # mappings between hamster categories and lp projects.
 
-# create LP tasks in a package for tasks in hamster category:
-MAP_chirocivi=([package]=27411421 [activity]=139977)
-MAP_community=([package]=27411421 [activity]=139977)
+# create LP tasks in a folder for tasks in hamster category:
+declare -A MAP_chirocivi=([folder]=27411421 [activity]=139977)
+declare -A MAP_krinkel=([folder]=33088192 [activity]=139977)
+
 # log all tasks of this hamster category to an existing LP task:
-MAP_helpdesk=([task]=12138181 [activity]=139812)
+declare -A MAP_helpdesk=([task]=12138181 [activity]=139812)
