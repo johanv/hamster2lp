@@ -43,6 +43,22 @@ function get_lp_task {
   #call_lp "workspaces/${WORKSPACE_ID}/tasks" -G --data-urlencode "filter[]=name = forensics"
 }
 
+# Public: creates a new task in LiquidPlanner.
+# The task-ID is shown on stdout.
+#
+# $1 - Task name
+# $2 - ID of parent folder
+function create_lp_task {
+  DATA="{\"task\": {\"name\": \"${1}\", \"parent_id\": ${2}}}"
+  JSON=$(call_lp "workspaces/${WORKSPACE_ID}/tasks" -X POST --data "${DATA}")
+  STATUS=$?
+  if [[ ! $STATUS = 201 ]]; then
+    2>&1 echo "ERROR: Could not create task ${1} in ${2}."
+    2>&1 echo "STATUS: $STATUS"
+  fi
+  echo $JSON | jq .id
+}
+
 # Public: get or create a task in LiquidPlanner.
 #
 # The task-ID will be printed on stdout (because return values are 8-bit ints)
@@ -66,11 +82,17 @@ function get_or_create_lp_task {
   fi
 
   if [ -z $FOLDER ]; then
-    >&2 echo "Warning: Tasks in category $2 are not logged."
+    >&2 echo "WARNING: Tasks in category $2 are not logged."
     return
   fi
 
-  get_lp_task "${1}" "${FOLDER}"
+  TASK_ID=$(get_lp_task "${1}" "${FOLDER}")
+  if [ $TASK_ID = 'null' ]; then
+    >&2 echo INFO: CREATING TASK "${1}" in "${FOLDER}"
+    create_lp_task "${1}" "${FOLDER}"
+    return
+  fi
+  echo $TASK_ID
 }
 
 if [ -z $1 ]; then
@@ -87,8 +109,8 @@ JOIN activities a ON f.activity_id = a.id
 JOIN categories c ON a.category_id = c.id
 WHERE f.start_time >= "$1"
 ORDER BY f.start_time
--- limit 2 while testing
-LIMIT 2;
+-- limit for testing
+LIMIT 12;
 EOF
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
@@ -98,7 +120,9 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     HOURS=$(echo $line | cut -f 5 -d \|)
     LP_TASK=$(get_or_create_lp_task "${TASK}" "${CATEGORY}")
 
-    echo LP_TASK: $CATEGORY .. $LP_TASK
+    if [ ! -z "${LP_TASK}" ]; then
+      echo "$CATEGORY: $PERFORMED_ON: Logging $HOURS hours on task $TASK ($LP_TASK) "
+    fi
 done < $TMPFILE
 
 rm $TMPFILE
