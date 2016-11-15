@@ -87,7 +87,7 @@ function get_or_create_lp_task {
   fi
 
   TASK_ID=$(get_lp_task "${1}" "${FOLDER}")
-  if [ $TASK_ID = 'null' ]; then
+  if [ "$TASK_ID" = 'null' ]; then
     >&2 echo INFO: CREATING TASK "${1}" in "${FOLDER}"
     create_lp_task "${1}" "${FOLDER}"
     return
@@ -133,11 +133,12 @@ FROM facts f
 JOIN activities a ON f.activity_id = a.id
 JOIN categories c ON a.category_id = c.id
 WHERE f.start_time >= "$1"
-ORDER BY f.start_time
+ORDER BY f.start_time;
 EOF
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
-    TASK=$(echo $line | cut -f 1 -d \|)
+    # remove annoying characters from task names, replace by _
+    TASK=$(echo $line | tr '()[]-' '_____'| cut -f 1 -d \|)
     CATEGORY=$(echo $line | cut -f 2 -d \|)
     PERFORMED_ON=$(echo $line | cut -f 3 -d \|)
     HOURS=$(echo $line | cut -f 5 -d \|)
