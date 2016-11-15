@@ -38,7 +38,8 @@ function call_lp {
 # $1 - Task name
 # $2 - ID of liquidplanner folder
 function get_lp_task {
-  call_lp "workspaces/${WORKSPACE_ID}/tasks" -G --data-urlencode "filter[]=name=${1}" --data-urlencode "filter[]=parent_id=${2}"
+  call_lp "workspaces/${WORKSPACE_ID}/tasks" -G --data-urlencode \
+    "filter[]=name=${1}" --data-urlencode "filter[]=parent_id=${2}" | jq '.[0]|.id'
   #call_lp "workspaces/${WORKSPACE_ID}/tasks" -G --data-urlencode "filter[]=name = forensics"
 }
 
@@ -56,11 +57,11 @@ function get_or_create_lp_task {
   # getting elements of associative arrays if the name of the
   # array is given, does not seem to be trivial using bash.
 
-  TASK=$(eval echo \${$MAPNAME[task]})
+  TASK_ID=$(eval echo \${$MAPNAME[task]})
   FOLDER=$(eval echo \${$MAPNAME[folder]})
 
-  if [ ! -z $TASK ]; then
-    echo $TASK
+  if [ ! -z $TASK_ID ]; then
+    echo $TASK_ID
     return
   fi
 
@@ -69,7 +70,7 @@ function get_or_create_lp_task {
     return
   fi
 
-  get_lp_task "${TASK}" "${FOLDER}"
+  get_lp_task "${1}" "${FOLDER}"
 }
 
 if [ -z $1 ]; then
