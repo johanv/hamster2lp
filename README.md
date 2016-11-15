@@ -9,10 +9,10 @@ I don't use LiquidPlanner for planning, I only use it for time tracking.
 
 ## how it works
 
-Create a file `~/.h2lprc`, based on the contents of [h2lprc.example]. You need
-to provide your LiquidPlanner credentials, and mappings from hamster categories
-to LiquidPlanner folders. You can also map all tasks of a hamster category to
-one particular LiquidPlanner task.
+Create a file `~/.h2lprc`, based on the contents of [h2lprc.example](h2lprc.example). 
+You need to provide your LiquidPlanner credentials, and mappings from
+hamster categories to LiquidPlanner folders. You can also map all tasks
+of a hamster category to one particular LiquidPlanner task.
 
 Hamster tasks in projects without mapping are ignored.
 
