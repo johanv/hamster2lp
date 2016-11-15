@@ -17,12 +17,27 @@ function call_lp {
   TMPFILE=`mktemp`
   # avoid hitting rate limit
   sleep 1
-  STATUS=$(curl -u "${API_USER}:${API_PW}" -qsw '%{http_code}' -o $TMPFILE -H "Content-Type: application/json" https://app.liquidplanner.com/api/$1)
+  URL="https://app.liquidplanner.com/api/${1}"
+  # use -g to avoid problems with [] in url.
+  STATUS=$(curl -u "${API_USER}:${API_PW}" -qgsw '%{http_code}' -o $TMPFILE -H "Content-Type: application/json" "${URL}")
   cat $TMPFILE
   rm $TMPFILE
   return $STATUS
 }
 
-call_lp 'account'
+sql="SELECT a.name, c.name, f.start_time, f.end_time, 24*(julianday(f.end_time)-julianday(f.start_time)) FROM facts f JOIN activities a ON f.activity_id = a.id JOIN categories c ON a.category_id = c.id WHERE f.start_time >= '2016-10-17' ORDER BY f.start_time;"
 
-echo Status $?
+sqlite3 ~/.local/share/hamster-applet/hamster.db << EOF
+SELECT a.name, c.name, f.start_time, f.end_time,
+  24*(julianday(f.end_time)-julianday(f.start_time))
+FROM facts f
+JOIN activities a ON f.activity_id = a.id
+JOIN categories c ON a.category_id = c.id
+WHERE f.start_time >= '2016-10-17'
+ORDER BY f.start_time;
+EOF
+
+# call_lp $1
+
+# track time:
+# curl -X POST -H "Content-Type: application/json" -gu "${API_USER}:${API_PW}" https://app.liquidplanner.com/api/workspaces/103787/tasks/34108034/track_time -d '{"work":1,"activity_id":139977}'

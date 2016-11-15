@@ -1,0 +1,9 @@
+# example h2lprc file.
+
+API_USER=your.email.address@example.com
+API_PW='your secret password!'
+
+# you can find out your workspace id by doing a get request to
+# https://app.liquidplanner.com/api/workspaces. Look for the id field
+# in the result.
+WORKSPACE_ID=workspace_id
