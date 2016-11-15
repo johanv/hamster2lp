@@ -3,7 +3,14 @@
 API_USER=your.email.address@example.com
 API_PW='your secret password!'
 
-# you can find out your workspace id by doing a get request to
-# https://app.liquidplanner.com/api/workspaces. Look for the id field
-# in the result.
+# you can find out your workspace id in the url if you surf to liquidplanner,
+# or you can do a get request to https://app.liquidplanner.com/api/workspaces.
 WORKSPACE_ID=workspace_id
+
+# mappings between hamster categories and lp projects.
+
+# create LP tasks in a package for tasks in hamster category:
+MAP_chirocivi=([package]=27411421 [activity]=139977)
+MAP_community=([package]=27411421 [activity]=139977)
+# log all tasks of this hamster category to an existing LP task:
+MAP_helpdesk=([task]=12138181 [activity]=139812)
