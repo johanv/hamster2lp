@@ -134,8 +134,6 @@ JOIN activities a ON f.activity_id = a.id
 JOIN categories c ON a.category_id = c.id
 WHERE f.start_time >= "$1"
 ORDER BY f.start_time
--- limit for testing
-LIMIT 4;
 EOF
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
