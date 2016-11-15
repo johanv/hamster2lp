@@ -29,7 +29,7 @@ integrates with [project hamster](https://github.com/projecthamster/hamster-gtk)
 a time tracker I have been using for several years.
 
 Now my collegues use LiquidPlanner for planning and time tracking, and I have to
-enter my time tracking in LiquidPlanner as well. I have been doing this way too often,
+enter my time tracking in LiquidPlanner as well. I have been doing this manually way too often,
 so now at last I have a script to do this.
 
 ## don't try this at home
