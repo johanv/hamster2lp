@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Copyright 2016 Johan Vervloet
+# You can use this under the terms of GNU GPL v3.
+# https://www.gnu.org/licenses/gpl-3.0.en.html
+
 # see the h2lprc.example file for info about the rc file
 source ~/.h2lprc
 
