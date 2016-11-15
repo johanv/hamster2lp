@@ -95,6 +95,21 @@ function get_or_create_lp_task {
   echo $TASK_ID
 }
 
+# Public: log time in LiquidPlanner.
+#
+# $1 - task ID
+# $2 - # hours to log
+# $3 - activity id
+# $4 - date on which the work was performed
+#
+function lp_log {
+  DATA="{\"work\":\"$2\",\"activity_id\":${3}, \"work_performed_on\":\"${4}\"}"
+  JSON=$(call_lp "workspaces/${WORKSPACE_ID}/tasks/${1}/track_time" -X POST --data "${DATA}")
+  if [ ! $STATUS = 200 ]; then
+    2>&1 echo "ERROR: Could not track time for $1 on $4 ($2 hours)"
+  fi
+}
+
 if [ -z $1 ]; then
   echo "USAGE: $0 start_date"
   exit 1
@@ -110,7 +125,7 @@ JOIN categories c ON a.category_id = c.id
 WHERE f.start_time >= "$1"
 ORDER BY f.start_time
 -- limit for testing
-LIMIT 12;
+LIMIT 2;
 EOF
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
@@ -121,7 +136,11 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     LP_TASK=$(get_or_create_lp_task "${TASK}" "${CATEGORY}")
 
     if [ ! -z "${LP_TASK}" ]; then
+      # smelly code...
+      MAPNAME=MAP_$CATEGORY
+      ACTIVITY=$(eval echo \${$MAPNAME[activity]})
       echo "$CATEGORY: $PERFORMED_ON: Logging $HOURS hours on task $TASK ($LP_TASK) "
+      lp_log $LP_TASK $HOURS $ACTIVITY $PERFORMED_ON
     fi
 done < $TMPFILE
 
