@@ -8,6 +8,8 @@ API_PW='your secret password!'
 WORKSPACE_ID=workspace_id
 
 # mappings between hamster categories and lp projects.
+# call the mappings MAP_category, where category is the name of a category 
+# in hamster.
 
 # create LP tasks in a folder for tasks in hamster category:
 declare -A MAP_chirocivi=([folder]=27411421 [activity]=139977)
