@@ -25,9 +25,8 @@ function call_lp {
   return $STATUS
 }
 
-sql="SELECT a.name, c.name, f.start_time, f.end_time, 24*(julianday(f.end_time)-julianday(f.start_time)) FROM facts f JOIN activities a ON f.activity_id = a.id JOIN categories c ON a.category_id = c.id WHERE f.start_time >= '2016-10-17' ORDER BY f.start_time;"
-
-sqlite3 ~/.local/share/hamster-applet/hamster.db << EOF
+TMPFILE=`mktemp`
+sqlite3 ~/.local/share/hamster-applet/hamster.db > $TMPFILE << EOF
 SELECT a.name, c.name, f.start_time, f.end_time,
   24*(julianday(f.end_time)-julianday(f.start_time))
 FROM facts f
@@ -36,6 +35,12 @@ JOIN categories c ON a.category_id = c.id
 WHERE f.start_time >= '2016-10-17'
 ORDER BY f.start_time;
 EOF
+
+while IFS='' read -r line || [[ -n "$line" ]]; do
+    echo "Text read from file: $line"
+done < $TMPFILE
+
+rm $TMPFILE
 
 # call_lp $1
 
