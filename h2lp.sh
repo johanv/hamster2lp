@@ -7,13 +7,6 @@
 # see the h2lprc.example file for info about the rc file
 source ~/.h2lprc
 
-function inspect {
-  for var in "$@"
-  do
-    echo argument: "$var"
-  done
-}
-
 # Private: call the LiquidPlanner API
 #
 # This uses the credentials in API_USER and API_PW for authentication.
@@ -44,7 +37,6 @@ function call_lp {
 function get_lp_task {
   call_lp "workspaces/${WORKSPACE_ID}/tasks" -G --data-urlencode \
     "filter[]=name=${1}" --data-urlencode "filter[]=parent_id=${2}" | jq '.[0]|.id'
-  #call_lp "workspaces/${WORKSPACE_ID}/tasks" -G --data-urlencode "filter[]=name = forensics"
 }
 
 # Public: creates a new task in LiquidPlanner.
@@ -111,7 +103,6 @@ function get_or_create_lp_task {
 function lp_log {
   EXISTING=$(grep "^$4\$" ~/.h2lp.facts)
   if [ ! -z "$EXISTING" ]; then
-    2>&1 echo $EXISTING
     2>&1 echo "INFO: $4: Skipped logging activity $3, task $1 on $5."
     return
   fi
@@ -160,8 +151,3 @@ done < $TMPFILE
 
 rm $TMPFILE
 
-
-# call_lp $1
-
-# track time:
-# curl -X POST -H "Content-Type: application/json" -gu "${API_USER}:${API_PW}" https://app.liquidplanner.com/api/workspaces/103787/tasks/34108034/track_time -d '{"work":1,"activity_id":139977}'

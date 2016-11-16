@@ -16,6 +16,13 @@ of a hamster category to one particular LiquidPlanner task.
 
 Hamster tasks in projects without mapping are ignored.
 
+To run the script, you have to provide a data as command line argument. Only
+time tracked on or after the date is entered in the LiquidPlanner timesheet.
+E.g.
+
+    ./h2lp.sh 2016-10-19
+
+
 The script does some kind of logging in a file `~/.h2lp.facts` to prevent
 times to be logged twice.
 
