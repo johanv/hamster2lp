@@ -134,7 +134,7 @@ EOF
 while IFS='' read -r line || [[ -n "$line" ]]; do
     # remove annoying characters from task names, replace by _
     TASK=$(echo $line | tr '()[]-' '_____'| cut -f 1 -d \|)
-    CATEGORY=$(echo $line | cut -f 2 -d \|)
+    CATEGORY=$(echo $line | cut -f 2 -d \| | tr - _)
     PERFORMED_ON=$(echo $line | cut -f 3 -d \|)
     HOURS=$(echo $line | cut -f 5 -d \|)
     FACT_ID=$(echo $line | cut -f 6 -d \|)
