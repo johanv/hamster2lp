@@ -14,8 +14,7 @@ I don't use LiquidPlanner for planning, I only use it for time tracking.
 ## t2lp.sh
 
 This is a second tool, that imports tasks from taskwarrior into
-LiquidPlanner projects. It should be able to package the new tasks,
-but that does not work yet (TODO).
+LiquidPlanner projects. It is able to package the new tasks, w00t ;-).
 
 ## how it works
 
@@ -36,7 +35,7 @@ The script does some kind of logging in a file `~/.h2lp.facts` to prevent
 times to be logged twice.
 
 `t2lp.sh` just copies the pending tasks. It does not require any arguments.
-If you want to package all newly created tasks (which does not work atm),
+If you want to package all newly created tasks (,
 make sure the PACKAGE_ID variable is set correctly in `~/.h2lprc`.
 
 ## but why?
